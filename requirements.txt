@@ -1,1 +1,7 @@
 streamlit
+crewai[tools]
+langchain_openai
+selenium
+webdriver-manager
+opencv-python
+pillow  # Pour la gestion des images dans Streamlit
