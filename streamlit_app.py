@@ -73,17 +73,20 @@ response_writer_agent = Agent(
 # Tâches
 text_search_task = Task(
     description="Rechercher des informations détaillées sur la pièce de camion.",
-    agent=text_search_agent
+    agent=text_search_agent,
+    expected_output="Une liste d'informations détaillées sur la pièce de camion recherchée."
 )
 
 web_scraping_task = Task(
     description="Scraper des sites web pour obtenir des informations sur la pièce de camion.",
-    agent=web_scraper_agent
+    agent=web_scraper_agent,
+    expected_output="Des données spécifiques extraites des sites web, comme les prix et la disponibilité."
 )
 
 report_writing_task = Task(
     description="Générer un rapport complet sur la pièce basée sur les recherches.",
-    agent=response_writer_agent
+    agent=response_writer_agent,
+    expected_output="Un rapport synthétique compilant toutes les informations collectées."
 )
 
 # Crew
