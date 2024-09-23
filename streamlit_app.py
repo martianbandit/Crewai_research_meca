@@ -2,19 +2,22 @@ import os
 import streamlit as st
 from PIL import Image
 import cv2
+import requests
 from crewai import Agent, Task, Crew, Process
 from crewai_tools import SerperDevTool
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from langchain_openai import ChatOpenAI
-import requests
 
 # Définir les clés d'API et les variables d'environnement
-os.environ["OPENAI_API_KEY"] = "your_openai_key"
-os.environ["SERPER_API_KEY"] = "your_serper_key"
-TINEYE_API_KEY = "your_tineye_api_key"  # Utilisation de l'API TinEye
+os.environ["OPENAI_API_KEY"] = "your_openai_key"  # Remplacez par votre clé OpenAI
+os.environ["SERPER_API_KEY"] = "your_serper_key"  # Remplacez par votre clé Serper
+TINEYE_API_KEY = "your_tineye_api_key"  # Remplacez par votre clé TinEye
+
+# Assurez-vous que Google Chrome est installé sur votre système
 
 # Outil de recherche web
 search_tool = SerperDevTool()
@@ -75,10 +78,19 @@ image_analysis_tool = ImageAnalysisTool()
 # Outil de scraping web
 class WebScraperTool:
     def __init__(self):
-        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+        # Configurer les options pour le mode headless
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")  # Exécute Chrome en mode headless
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        # Initialiser le WebDriver avec les options
+        self.driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=chrome_options
+        )
 
     def search_part(self, query):
-        self.driver.get('https://www.example-truckparts.com')  # URL fictive
+        self.driver.get('https://www.traction.com')  # URL fictive
         search_box = self.driver.find_element(By.NAME, 'search')
         search_box.send_keys(query)
         search_box.submit()
@@ -88,8 +100,6 @@ class WebScraperTool:
 
     def close(self):
         self.driver.quit()
-
-web_scraper_tool = WebScraperTool()
 
 # Agents
 text_search_agent = Agent(
@@ -101,7 +111,7 @@ text_search_agent = Agent(
 )
 
 image_analysis_agent = Agent(
-    role='Analyste image & Recherche inversée.',
+    role='Analyste image & Recherche inversée',
     goal='Analyser des images de pièces et trouver des correspondances en ligne.',
     backstory="Expert en analyse d'image et en recherche d'images similaires sur le web.",
     tools=[image_analysis_tool],
@@ -112,7 +122,7 @@ web_scraper_agent = Agent(
     role='Scraper Web',
     goal='Récupérer des informations spécifiques depuis des sites de vente de pièces.',
     backstory="Spécialiste en extraction d'informations depuis des sources en ligne.",
-    tools=[web_scraper_tool],
+    tools=[],  # Nous ajouterons l'outil au moment de l'exécution
     verbose=True
 )
 
@@ -162,7 +172,16 @@ def run_truck_parts_search(query=None, image_path=None):
 
     # Si une recherche textuelle est fournie, exécuter la recherche web
     if query:
-        results = truck_parts_crew.kickoff()
+        # Initialiser le scraper
+        web_scraper_tool = WebScraperTool()
+        try:
+            # Ajouter l'outil au scraper agent
+            web_scraper_agent.tools = [web_scraper_tool]
+            # Exécuter le crew
+            results = truck_parts_crew.kickoff()
+        finally:
+            # Fermer le WebDriver pour libérer les ressources
+            web_scraper_tool.close()
         return results
 
 # Interface Streamlit
@@ -192,5 +211,4 @@ if input_type == "Image":
             results = run_truck_parts_search(image_path=img_path)
             st.write("Résultats de l'analyse :", results)
 
-# Nettoyage des ressources
-web_scraper_tool.close()
+# Remarque : Nous avons supprimé web_scraper_tool.close() au niveau du module, car il est géré dans la fonction
