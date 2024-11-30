@@ -179,3 +179,144 @@ Les contributions sont les bienvenues ! Voir [CONTRIBUTING.md](CONTRIBUTING.md) 
 
 ---
 Développé avec ❤️ pour la communauté des mécaniciens
+
+# Assistant Mécanique Pro 🔧
+
+## Description
+Assistant Mécanique Pro est un outil d'IA avancé conçu pour aider les mécaniciens de camions dans leur travail quotidien. Il combine l'expertise de plusieurs agents spécialisés pour fournir une assistance complète dans le diagnostic, la maintenance et la réparation des véhicules lourds.
+
+## Fonctionnalités Principales 🚀
+
+- **Analyse d'Images** 📸
+  - Détection automatique des dommages
+  - Évaluation de la sévérité
+  - Génération de rapports détaillés
+
+- **Conformité Réglementaire** 📋
+  - Vérification FMCSA et DOT
+  - Suivi des rappels
+  - Audit de conformité
+
+- **Diagnostic Électronique** 💻
+  - Interprétation des codes DTC
+  - Analyse CAN Bus
+  - Recommandations de réparation
+
+- **Télémétrie IoT** 📡
+  - Surveillance en temps réel
+  - Analyse prédictive
+  - Maintenance préventive
+
+- **Assistance Technique** 📚
+  - Recherche de tutoriels
+  - Analyse de contenu vidéo
+  - Documentation technique
+
+## Installation 🛠️
+
+1. Cloner le dépôt :
+```bash
+git clone https://github.com/votre-username/assistant-mecanique-pro.git
+cd assistant-mecanique-pro
+```
+
+2. Créer un environnement virtuel :
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+```
+
+3. Installer les dépendances :
+```bash
+pip install -r requirements.txt
+```
+
+4. Configurer les variables d'environnement :
+```bash
+cp .env.example .env
+# Éditer .env avec vos clés API
+```
+
+## Configuration ⚙️
+
+1. Configurer les agents dans `config/agents.yaml`
+2. Ajuster les paramètres dans `config/settings.yaml`
+3. Personnaliser les outils dans `app/tools/`
+
+## Utilisation 🚀
+
+1. Lancer l'application Streamlit :
+```bash
+streamlit run streamlit_app.py
+```
+
+2. Utiliser l'API :
+```python
+from app.crews.mechanic_crew import MechanicCrew
+
+# Initialiser l'équipe
+crew = MechanicCrew()
+
+# Inspecter un véhicule
+result = crew.inspect_vehicle(
+    vehicle_id="TRUCK_001",
+    images=["image1.jpg", "image2.jpg"],
+    dtc_codes=["P0123", "P0456"]
+)
+```
+
+## Structure du Projet 📁
+
+```
+assistant-mecanique-pro/
+├── app/
+│   ├── agents/          # Agents spécialisés
+│   ├── crews/           # Équipes d'agents
+│   ├── tools/           # Outils spécialisés
+│   └── utils/           # Utilitaires
+├── config/              # Fichiers de configuration
+├── docs/                # Documentation
+├── tests/               # Tests unitaires et d'intégration
+└── streamlit_app.py     # Interface utilisateur
+```
+
+## Variables d'Environnement 🔐
+
+- `OPENAI_API_KEY`: Clé API OpenAI
+- `SUPABASE_URL`: URL Supabase
+- `SUPABASE_KEY`: Clé API Supabase
+- `SERPER_API_KEY`: Clé API Serper
+- `IMAGE_STORAGE_BUCKET`: Bucket de stockage d'images
+
+## Tests 🧪
+
+Exécuter les tests :
+```bash
+pytest tests/
+```
+
+## Documentation 📚
+
+La documentation complète est disponible dans le dossier `docs/` et peut être générée avec MkDocs :
+```bash
+mkdocs serve
+```
+
+## Contribution 🤝
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
+
+## Licence 📄
+
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+## Contact 📧
+
+Votre Nom - [@votre_twitter](https://twitter.com/votre_twitter)
+
+Lien du projet : [https://github.com/votre-username/assistant-mecanique-pro](https://github.com/votre-username/assistant-mecanique-pro)

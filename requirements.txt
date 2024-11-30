@@ -1,71 +1,88 @@
-# Framework principal
-streamlit>=1.24.0
-crewai>=0.1.29
-
-# Agents et LLM
+# Core Dependencies
+crewai>=0.11.0
 langchain>=0.1.0
-langchain-openai>=0.0.2
-openai>=1.3.0
-
-# Base de données et authentification
-supabase>=1.0.3
-streamlit-authenticator>=0.2.3
-python-jose>=3.3.0
-passlib>=1.7.4
-
-# Outils de recherche et web scraping
-selenium>=4.11.2
-webdriver-manager>=4.0.0
-beautifulsoup4>=4.12.0
-requests>=2.31.0
-serper-dev>=0.1.0
-browse-ai>=0.1.0
-
-# Géolocalisation
-geopy>=2.4.0
-
-# Traitement des données
-pandas>=2.0.0
-numpy>=1.24.3
-scikit-learn>=1.3.0
-
-# Gestion de la mémoire et cache
-memoization==0.4.0
-redis==4.5.4
-diskcache>=5.6.1
-
-# Traitement d'images
-Pillow==9.5.0
-opencv-python==4.7.0.72
-pytesseract==0.3.10
-
-# Génération de PDF
-reportlab==4.0.4
-
-# Utilitaires
-python-dotenv>=1.0.0
-pydantic>=2.0.0
+openai>=1.3.7
+streamlit>=1.29.0
+pydantic>=2.5.0
 PyYAML>=6.0.1
-aiohttp>=3.9.0
-asyncio>=3.4.3
-tqdm>=4.66.1
 
-# Logging et monitoring
-logging>=0.4.9.6
-sentry-sdk>=1.39.1
+# Streamlit Components
+streamlit-option-menu>=0.3.6
+streamlit-image-select>=0.6.0
+streamlit-camera-input-live>=0.2.0
+streamlit-extras>=0.3.5
+streamlit-autorefresh>=1.0.1
+streamlit-custom-notification-box>=0.1.1
+streamlit-toggle-switch>=1.0.2
+streamlit-card>=1.0.0
+streamlit-faker>=0.0.3
+hydralit_components>=1.0.10
+extra-streamlit-components>=0.1.60
 
-# Tests
-pytest>=7.4.0
-pytest-asyncio>=0.21.1
+# UI/UX
+plotly>=5.18.0
+altair>=5.2.0
+bokeh>=3.3.1
+streamlit-lottie>=0.0.5
+streamlit-authenticator>=0.2.3
 
-# Outils CAN Bus et IoT
-python-can>=4.1.0
+# Export
+fpdf2>=2.7.6
+openpyxl>=3.1.2
+XlsxWriter>=3.1.9
+python-docx>=1.1.0
+pdfkit>=1.0.0
+reportlab>=4.0.8
+
+# Image Processing
+opencv-python>=4.8.0
+Pillow>=10.1.0
+pytesseract>=0.3.10
+
+# Diagnostic & CAN Bus
+python-can>=4.2.2
+cantools>=39.2.0
+obd>=0.7.1
+
+# IoT & Telemetry
 paho-mqtt>=1.6.1
+influxdb-client>=1.38.0
 pyserial>=3.5
 
-# Traitement vidéo YouTube
-youtube-transcript-api>=0.6.0
-youtube-search>=2.1.2
+# Video Processing
+youtube-transcript-api>=0.6.1
+moviepy>=1.0.3
 
-# Conformité et sécurité
-safety>=2.3.5
+# Database
+supabase>=2.0.3
+sqlalchemy>=2.0.23
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+aiohttp>=3.9.1
+beautifulsoup4>=4.12.2
+pandas>=2.1.4
+numpy>=1.26.2
+pyyaml>=6.0.1
+python-jose>=3.3.0
+httpx>=0.25.2
+markdown>=3.5.1
+jinja2>=3.1.2
+watchdog>=3.0.0
+
+# Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+pytest-cov>=4.1.0
+
+# Documentation
+mkdocs>=1.5.3
+mkdocs-material>=9.4.14
+mkdocstrings>=0.23.0
+
+# Development
+black>=23.11.0
+isort>=5.12.0
+flake8>=6.1.0
+mypy>=1.7.1
