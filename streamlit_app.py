@@ -1,121 +1,158 @@
 import os
 import streamlit as st
-import requests
-from crewai import Agent, Task, Crew, Process
-from crewai_tools import SerperDevTool
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from langchain_openai import ChatOpenAI
+import streamlit_authenticator as stauth
+from app.auth.auth_manager import AuthManager
+from app.database.supabase_manager import SupabaseManager
+from app.agents.mechanic_agents import MechanicCrew
+from app.memory.memo_manager import MemoManager
+from dotenv import load_dotenv
 
-# Définir les clés d'API et les variables d'environnement
-os.environ["OPENAI_API_KEY"] = "your_openai_key"  # Remplacez par votre clé OpenAI
-os.environ["SERPER_API_KEY"] = "your_serper_key"  # Remplacez par votre clé Serper
+# Chargement des variables d'environnement
+load_dotenv()
 
-# Assurez-vous que Google Chrome est installé sur votre système
-
-# Outil de recherche web
-search_tool = SerperDevTool()
-
-# Outil de scraping web
-class WebScraperTool:
-    def __init__(self):
-        # Configurer les options pour le mode headless
-        chrome_options = Options()
-        chrome_options.add_argument("--headless")  # Exécute Chrome en mode headless
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        # Initialiser le WebDriver avec les options
-        self.driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
-            options=chrome_options
-        )
-
-    def search_part(self, query):
-        self.driver.get('https://www.example-truckparts.com')  # URL fictive
-        search_box = self.driver.find_element(By.NAME, 'search')
-        search_box.send_keys(query)
-        search_box.submit()
-        # Code simplifié pour la démonstration
-        results = [{"name": "Pièce X", "price": "100€"}, {"name": "Pièce Y", "price": "120€"}]
-        return results
-
-    def close(self):
-        self.driver.quit()
-
-# Agents
-text_search_agent = Agent(
-    role='Expert en recherche web',
-    goal='Trouver des informations détaillées sur des pièces de camion.',
-    backstory="Spécialiste en recherche avancée pour trouver des détails techniques sur des pièces.",
-    tools=[search_tool],
-    verbose=True
+# Configuration de la page Streamlit
+st.set_page_config(
+    page_title="Assistant Mécanique Pro",
+    page_icon="🔧",
+    layout="wide"
 )
 
-web_scraper_agent = Agent(
-    role='Scraper Web',
-    goal='Récupérer des informations spécifiques depuis des sites de vente de pièces.',
-    backstory="Spécialiste en extraction d'informations depuis des sources en ligne.",
-    tools=[],  # Nous ajouterons l'outil au moment de l'exécution
-    verbose=True
-)
+# Initialisation des gestionnaires
+auth_manager = AuthManager()
+db_manager = SupabaseManager()
+memo_manager = MemoManager()
 
-response_writer_agent = Agent(
-    role='Rédacteur technique',
-    goal='Synthétiser les résultats de la recherche pour générer un rapport.',
-    backstory="Expert en rédaction technique pour créer des rapports compréhensibles.",
-    tools=[],
-    verbose=True
-)
+# Configuration de l'authentification
+if 'authentication_status' not in st.session_state:
+    st.session_state['authentication_status'] = None
 
-# Tâches
-text_search_task = Task(
-    description="Rechercher des informations détaillées sur la pièce de camion.",
-    agent=text_search_agent,
-    expected_output="Une liste d'informations détaillées sur la pièce de camion recherchée."
-)
+# Interface de connexion
+if st.session_state['authentication_status'] is not True:
+    auth_manager.show_login_form()
+else:
+    # Menu principal
+    st.sidebar.title("Menu Principal")
+    menu_choice = st.sidebar.selectbox(
+        "Navigation",
+        ["Bons de travail", "Véhicules", "Pièces", "Mécaniciens"]
+    )
 
-web_scraping_task = Task(
-    description="Scraper des sites web pour obtenir des informations sur la pièce de camion.",
-    agent=web_scraper_agent,
-    expected_output="Des données spécifiques extraites des sites web, comme les prix et la disponibilité."
-)
+    # Affichage du menu sélectionné
+    if menu_choice == "Bons de travail":
+        st.title("Gestion des Bons de Travail")
+        
+        # Création d'un nouveau bon de travail
+        with st.form("work_order_form"):
+            st.subheader("Nouveau Bon de Travail")
+            
+            # Sélection du véhicule depuis la base de données
+            vehicles = db_manager.get_vehicles()
+            selected_vehicle = st.selectbox(
+                "Sélectionner un véhicule",
+                options=vehicles,
+                format_func=lambda x: f"{x['make']} {x['model']} ({x['year']}) - {x['vin']}"
+            )
+            
+            # Sélection du mécanicien
+            mechanics = db_manager.get_mechanics()
+            selected_mechanic = st.selectbox(
+                "Mécanicien assigné",
+                options=mechanics,
+                format_func=lambda x: f"{x['first_name']} {x['last_name']}"
+            )
+            
+            # Description du problème
+            problem_description = st.text_area("Description du problème:", height=100)
+            symptoms = st.text_area("Symptômes observés:", height=100)
+            
+            submitted = st.form_submit_button("Générer le Bon de Travail")
 
-report_writing_task = Task(
-    description="Générer un rapport complet sur la pièce basée sur les recherches.",
-    agent=response_writer_agent,
-    expected_output="Un rapport synthétique compilant toutes les informations collectées."
-)
+        if submitted and problem_description:
+            with st.spinner("Analyse en cours..."):
+                # Création du contexte pour les agents
+                context = {
+                    "vehicle": selected_vehicle,
+                    "mechanic": selected_mechanic,
+                    "problem": problem_description,
+                    "symptoms": symptoms
+                }
+                
+                # Récupération de l'historique depuis memo
+                history = memo_manager.get_vehicle_history(selected_vehicle['vin'])
+                
+                # Initialisation du crew avec le contexte et l'historique
+                crew = MechanicCrew(context, history)
+                result = crew.process_work_order()
+                
+                # Sauvegarde du bon de travail dans Supabase
+                work_order = db_manager.create_work_order(result)
+                
+                # Mise à jour de la mémoire
+                memo_manager.update_vehicle_history(selected_vehicle['vin'], result)
+                
+                # Affichage des résultats
+                st.success("Bon de travail généré avec succès!")
+                st.json(result)
 
-# Crew
-truck_parts_crew = Crew(
-    agents=[text_search_agent, web_scraper_agent, response_writer_agent],
-    tasks=[text_search_task, web_scraping_task, report_writing_task],
-    process=Process.sequential,  # Processus séquentiel pour enchaîner les tâches
-    verbose=True
-)
+    elif menu_choice == "Véhicules":
+        st.title("Gestion des Véhicules")
+        
+        # Affichage de la liste des véhicules
+        vehicles = db_manager.get_vehicles()
+        st.dataframe(vehicles)
+        
+        # Formulaire d'ajout de véhicule
+        with st.form("add_vehicle_form"):
+            st.subheader("Ajouter un nouveau véhicule")
+            make = st.text_input("Marque:")
+            model = st.text_input("Modèle:")
+            year = st.number_input("Année:", min_value=1900, max_value=2024)
+            vin = st.text_input("Numéro VIN:")
+            
+            if st.form_submit_button("Ajouter"):
+                db_manager.add_vehicle(make, model, year, vin)
+                st.success("Véhicule ajouté avec succès!")
+                st.rerun()
 
-# Fonction pour exécuter le processus
-def run_truck_parts_search(query):
-    # Initialiser le scraper
-    web_scraper_tool = WebScraperTool()
-    try:
-        # Ajouter l'outil au scraper agent
-        web_scraper_agent.tools = [web_scraper_tool]
-        # Exécuter le crew
-        results = truck_parts_crew.kickoff()
-    finally:
-        # Fermer le WebDriver pour libérer les ressources
-        web_scraper_tool.close()
-    return results
+    elif menu_choice == "Pièces":
+        st.title("Gestion des Pièces")
+        
+        # Affichage de la liste des pièces
+        parts = db_manager.get_parts()
+        st.dataframe(parts)
+        
+        # Formulaire d'ajout de pièce
+        with st.form("add_part_form"):
+            st.subheader("Ajouter une nouvelle pièce")
+            part_number = st.text_input("Numéro de pièce:")
+            description = st.text_input("Description:")
+            manufacturer = st.text_input("Fabricant:")
+            price = st.number_input("Prix:", min_value=0.0)
+            
+            if st.form_submit_button("Ajouter"):
+                db_manager.add_part(part_number, description, manufacturer, price)
+                st.success("Pièce ajoutée avec succès!")
+                st.rerun()
 
-# Interface Streamlit
-st.title("Recherche et Analyse de Pièces de Camions")
+    elif menu_choice == "Mécaniciens":
+        st.title("Gestion des Mécaniciens")
+        
+        # Affichage de la liste des mécaniciens
+        mechanics = db_manager.get_mechanics()
+        st.dataframe(mechanics)
+        
+        # Formulaire d'ajout de mécanicien
+        with st.form("add_mechanic_form"):
+            st.subheader("Ajouter un nouveau mécanicien")
+            first_name = st.text_input("Prénom:")
+            last_name = st.text_input("Nom:")
+            specialization = st.text_input("Spécialisation:")
+            
+            if st.form_submit_button("Ajouter"):
+                db_manager.add_mechanic(first_name, last_name, specialization)
+                st.success("Mécanicien ajouté avec succès!")
+                st.rerun()
 
-search_query = st.text_input("Entrez la description ou le modèle de la pièce de camion :")
-if st.button("Rechercher"):
-    st.write("Recherche en cours...")
-    results = run_truck_parts_search(query=search_query)
-    st.write("Résultats de la recherche :", results)
+    # Bouton de déconnexion
+    if st.sidebar.button("Déconnexion"):
+        auth_manager.logout()
