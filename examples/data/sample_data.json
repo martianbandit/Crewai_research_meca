@@ -1,0 +1,66 @@
+{
+    "vehicle": {
+        "id": "TRUCK_001",
+        "vin": "1HGCM82633A123456",
+        "make": "Freightliner",
+        "model": "Cascadia",
+        "year": 2020,
+        "engine": {
+            "type": "DD15",
+            "displacement": "14.8L",
+            "horsepower": 505
+        }
+    },
+    "dtc_codes": [
+        {
+            "code": "P0123",
+            "description": "Throttle/Pedal Position Sensor/Switch A Circuit High",
+            "severity": "medium"
+        },
+        {
+            "code": "P0456",
+            "description": "Evaporative Emission System Leak Detected (very small leak)",
+            "severity": "low"
+        }
+    ],
+    "telemetry": {
+        "engine_temperature": 85,
+        "oil_pressure": 45,
+        "fuel_level": 75,
+        "mileage": 250000,
+        "tire_pressure": {
+            "front_left": 105,
+            "front_right": 105,
+            "rear_left_outer": 110,
+            "rear_left_inner": 110,
+            "rear_right_outer": 110,
+            "rear_right_inner": 110
+        }
+    },
+    "maintenance_history": [
+        {
+            "date": "2023-10-15",
+            "type": "oil_change",
+            "mileage": 245000,
+            "notes": "Routine maintenance"
+        },
+        {
+            "date": "2023-09-01",
+            "type": "brake_inspection",
+            "mileage": 240000,
+            "notes": "Replaced brake pads"
+        }
+    ],
+    "compliance": {
+        "dot_inspection": {
+            "last_date": "2023-11-01",
+            "status": "passed",
+            "next_due": "2024-05-01"
+        },
+        "emissions_test": {
+            "last_date": "2023-10-15",
+            "status": "passed",
+            "next_due": "2024-10-15"
+        }
+    }
+}
