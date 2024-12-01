@@ -24,38 +24,38 @@ Application d'assistance IA pour mécaniciens de camions, propulsée par CrewAI 
 Assistant Mécanique Pro est une application innovante basée sur CrewAI, conçue pour aider les mécaniciens de camions dans leur travail quotidien. Elle combine l'intelligence artificielle, l'expertise technique et des outils de recherche avancés pour optimiser la gestion des réparations et de la maintenance.
 
 ### 🌟 Fonctionnalités Principales
-1. _Gestion des Bons de Travail_
+1. * Gestion des Bons de Travail
 - Création automatisée de bons de travail détaillés
 - Diagnostic assisté par IA
 - Recommandations de réparations précises
 - Estimation des coûts et des délais
-2. _Recherche Technique_
-Accès aux manuels techniques
-Bulletins de service
-Historique des rappels (via NHTSA)
-Documentation spécifique aux modèles
-3. _Gestion des Pièces_
-Recherche multi-sources de pièces
-Comparaison des prix
-Localisation des fournisseurs
-Vérification de disponibilité
-4. _Planification_
-Calendrier de maintenance
-Optimisation des interventions
-Suivi des véhicules
-Historique des réparations
+2. * Recherche Technique
+- Accès aux manuels techniques
+- Bulletins de service
+- Historique des rappels (via NHTSA)
+- Documentation spécifique aux modèles
+3. * Gestion des Pièces
+- Recherche multi-sources de pièces
+- Comparaison des prix
+- Localisation des fournisseurs
+- Vérification de disponibilité
+4. * Planification
+- Calendrier de maintenance
+- Optimisation des interventions
+- Suivi des véhicules
+- Historique des réparations
 🛠️ ##Technologies Utilisées
-Framework Principal: -CrewAI-, -Streamlit-
-IA et LLM: -Langchain-, -OpenAI-
-Base de Données: -Supabase-
-Outils de Recherche: -Serper-, -Browse.ai-
-Géolocalisation: -Geopy-
-Mémoire et Cache: -Memo-, -Redis-
+### Framework Principal: - CrewAI, - Streamlit
+### IA et LLM: - Langchain, - OpenAI
+### Base de Données: - Supabase
+### Outils de Recherche: - Serper, - Browse.ai
+### Géolocalisation: - Geopy
+### Mémoire et Cache: - Memo, - Redis
 📋 ##Prérequis
-Python 3.9+
-Compte Supabase
-Clés API (OpenAI, Serper, etc.)
-Chrome WebDriver (pour le scraping)
+_ Python 3.9+
+_ Compte Supabase
+_ Clés API (OpenAI, Serper, etc.)
+_Chrome WebDriver (pour le scraping)
 🚀 ##Installation
 Cloner le repository:
 '''git clone https://github.com/votre-username/assistant-mecanique-pro.git
