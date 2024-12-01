@@ -10,12 +10,29 @@ class DiagnosticFlow:
     """Flow de diagnostic avec RAG et validation humaine"""
     
     def __init__(self):
-        self.vector_store = VectorStoreManager()
-        self.human_loop = HumanLoopManager()
-        self.crew = MechanicCrew()
+        try:
+            # Initialisation du gestionnaire de vecteurs
+            self.vector_store = VectorStoreManager()
+            
+            # Vérification de l'existence du gestionnaire
+            if self.vector_store is None:
+                raise ValueError("Impossible de créer le gestionnaire de vecteurs")
+            
+            # Initialisation des autres gestionnaires
+            self.human_loop = HumanLoopManager()
+            self.crew = MechanicCrew()
+            
+            # Chargement de la base de connaissances
+            try:
+                self.vector_store.load_vector_store("diagnostic_kb")
+            except Exception as load_error:
+                st.warning(f"Impossible de charger la base de connaissances : {str(load_error)}")
+                # Créer une base de connaissances vide si nécessaire
+                self.vector_store.create_empty_vector_store("diagnostic_kb")
         
-        # Chargement de la base de connaissances
-        self.vector_store.load_vector_store("diagnostic_kb")
+        except Exception as e:
+            st.error(f"Erreur lors de l'initialisation du flux de diagnostic : {str(e)}")
+            raise
     
     def process_diagnostic(
         self,

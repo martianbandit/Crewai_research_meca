@@ -5,6 +5,7 @@ from datetime import datetime
 import os
 from pathlib import Path
 import json
+import traceback
 
 from app.flows.diagnostic_flow import DiagnosticFlow
 from app.flows.inspection_flow import InspectionFlow
@@ -30,12 +31,17 @@ animation_manager = AnimationManager()
 search_manager = SearchManager()
 
 # Initialisation des flows
-if 'diagnostic_flow' not in st.session_state:
-    st.session_state.diagnostic_flow = DiagnosticFlow()
-if 'inspection_flow' not in st.session_state:
-    st.session_state.inspection_flow = InspectionFlow()
-if 'maintenance_flow' not in st.session_state:
-    st.session_state.maintenance_flow = MaintenanceFlow()
+try:
+    if 'diagnostic_flow' not in st.session_state:
+        st.session_state.diagnostic_flow = DiagnosticFlow()
+    if 'inspection_flow' not in st.session_state:
+        st.session_state.inspection_flow = InspectionFlow()
+    if 'maintenance_flow' not in st.session_state:
+        st.session_state.maintenance_flow = MaintenanceFlow()
+except Exception as e:
+    st.error(f"Erreur lors de l'initialisation des flux : {str(e)}")
+    st.error("Détails de l'erreur :")
+    st.error(traceback.format_exc())
 
 # Chargement du thème
 current_theme = theme_manager.load_theme_preference()

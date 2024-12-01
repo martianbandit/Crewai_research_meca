@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 import json
 import pickle
+import streamlit as st
 
 class VectorStoreManager:
     """Gestionnaire de base de données vectorielle pour le RAG"""
@@ -130,3 +131,31 @@ class VectorStoreManager:
         except Exception as e:
             print(f"Erreur lors de la suppression du vector store: {str(e)}")
             return False
+    
+    def create_empty_vector_store(self, store_name: str):
+        """
+        Crée une base de connaissances vectorielle vide
+        
+        Args:
+            store_name (str): Nom de la base de connaissances
+        """
+        try:
+            # Créer un FAISS vide avec les embeddings
+            empty_docs = []
+            empty_vectors = self.embeddings.embed_documents(["Aucun document"])
+            
+            # Créer un nouveau store vide
+            self.vector_store = FAISS.from_embeddings(
+                text_embeddings=list(zip(["Aucun document"], empty_vectors)),
+                embedding=self.embeddings
+            )
+            
+            # Sauvegarder le store vide
+            store_path = self.vector_store_path / f"{store_name}.index"
+            self.vector_store.save_local(str(store_path))
+            
+            st.info(f"Base de connaissances vide '{store_name}' créée avec succès.")
+        
+        except Exception as e:
+            st.error(f"Erreur lors de la création de la base de connaissances vide : {str(e)}")
+            raise
