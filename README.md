@@ -24,7 +24,7 @@ Application d'assistance IA pour mécaniciens de camions, propulsée par CrewAI 
 Assistant Mécanique Pro est une application innovante basée sur CrewAI, conçue pour aider les mécaniciens de camions dans leur travail quotidien. Elle combine l'intelligence artificielle, l'expertise technique et des outils de recherche avancés pour optimiser la gestion des réparations et de la maintenance.
 
 ### 🌟 Fonctionnalités Principales
- * Gestion des Bons de Travail
+ *Gestion des Bons de Travail*
 - Création automatisée de bons de travail détaillés
 - Diagnostic assisté par IA
 - Recommandations de réparations précises
