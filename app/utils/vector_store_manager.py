@@ -2,7 +2,16 @@ from typing import List, Dict, Any
 import numpy as np
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import OpenAIEmbeddings
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+# Essayer différentes importations de text_splitter
+try:
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
+except ImportError:
+    try:
+        from langchain_core.text_splitter import RecursiveCharacterTextSplitter
+    except ImportError:
+        from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 from langchain_community.document_loaders import (
     TextLoader,
     PDFLoader,
