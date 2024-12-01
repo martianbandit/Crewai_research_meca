@@ -24,33 +24,33 @@ Application d'assistance IA pour mécaniciens de camions, propulsée par CrewAI 
 Assistant Mécanique Pro est une application innovante basée sur CrewAI, conçue pour aider les mécaniciens de camions dans leur travail quotidien. Elle combine l'intelligence artificielle, l'expertise technique et des outils de recherche avancés pour optimiser la gestion des réparations et de la maintenance.
 
 ### 🌟 Fonctionnalités Principales
-1. Gestion des Bons de Travail
-Création automatisée de bons de travail détaillés
-Diagnostic assisté par IA
-Recommandations de réparations précises
-Estimation des coûts et des délais
-2. Recherche Technique
+1. _Gestion des Bons de Travail_
+- Création automatisée de bons de travail détaillés
+- Diagnostic assisté par IA
+- Recommandations de réparations précises
+- Estimation des coûts et des délais
+2. _Recherche Technique_
 Accès aux manuels techniques
 Bulletins de service
 Historique des rappels (via NHTSA)
 Documentation spécifique aux modèles
-3. Gestion des Pièces
+3. _Gestion des Pièces_
 Recherche multi-sources de pièces
 Comparaison des prix
 Localisation des fournisseurs
 Vérification de disponibilité
-4. Planification
+4. _Planification_
 Calendrier de maintenance
 Optimisation des interventions
 Suivi des véhicules
 Historique des réparations
 🛠️ ##Technologies Utilisées
-Framework Principal: CrewAI, Streamlit
-IA et LLM: Langchain, OpenAI
-Base de Données: Supabase
-Outils de Recherche: Serper, Browse.ai
-Géolocalisation: Geopy
-Mémoire et Cache: Memo, Redis
+Framework Principal: -CrewAI-, -Streamlit-
+IA et LLM: -Langchain-, -OpenAI-
+Base de Données: -Supabase-
+Outils de Recherche: -Serper-, -Browse.ai-
+Géolocalisation: -Geopy-
+Mémoire et Cache: -Memo-, -Redis-
 📋 ##Prérequis
 Python 3.9+
 Compte Supabase
@@ -288,17 +288,17 @@ Accéder aux différentes fonctionnalités via le menu principal
 🤖 ##Agents AI
 L'application utilise plusieurs agents spécialisés :
 
-_Expert en Diagnostic:_ Analyse les symptômes et établit des diagnostics
-_Chercheur Technique:_ Recherche la documentation pertinente
-_Spécialiste Pièces:_ Identifie et localise les pièces nécessaires
-_Rédacteur Technique:_ Génère les bons de travail
-_Planificateur:_ Optimise les interventions
+_Expert _en _Diagnostic: Analyse les symptômes et établit des diagnostics
+_Chercheur _Technique: Recherche la documentation pertinente
+_Spécialiste _Pièces: Identifie et localise les pièces nécessaires
+_Rédacteur _Technique: Génère les bons de travail
+_Planificateur: Optimise les interventions
 📊 Structure de la Base de Données
-_vehicles:_ Informations sur les véhicules
-_mechanics:_ Données des mécaniciens
-_parts:_ Catalogue de pièces
-_work_orders:_ Bons de travail
-_maintenance_history:_ Historique des interventions
+_vehicles: Informations sur les véhicules
+_mechanics: Données des mécaniciens
+_parts: Catalogue de pièces
+_work_orders: Bons de travail
+_maintenance_history: Historique des interventions
 🔒 Sécurité
 Authentification sécurisée
 Gestion des rôles et permissions
