@@ -29,7 +29,7 @@ Assistant Mécanique Pro est une application innovante basée sur CrewAI, conçu
 - Diagnostic assisté par IA
 - Recommandations de réparations précises
 - Estimation des coûts et des délais
- * _ Recherche Technique
+_ Recherche Technique
 - Accès aux manuels techniques
 - Bulletins de service
 - Historique des rappels (via NHTSA)
