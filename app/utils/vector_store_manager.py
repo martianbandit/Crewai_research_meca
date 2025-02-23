@@ -1,19 +1,32 @@
 from typing import List, Dict, Any
 import numpy as np
-from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import (
-    TextLoader,
-    PDFLoader,
-    CSVLoader,
-    JSONLoader
-)
 import os
 from pathlib import Path
 import json
 import pickle
 import streamlit as st
+from dotenv import load_dotenv
+
+# Chargement des variables d'environnement
+load_dotenv()
+
+# Vérification de la présence de la clé API OpenAI
+if not os.getenv("OPENAI_API_KEY"):
+    raise ValueError("La clé API OpenAI n'est pas configurée. Veuillez créer un fichier .env avec votre OPENAI_API_KEY")
+
+try:
+    from langchain_community.vectorstores.faiss import FAISS
+    from langchain_openai import OpenAIEmbeddings
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    from langchain_community.document_loaders.text import TextLoader
+    from langchain_community.document_loaders.unstructured import UnstructuredPDFLoader as PDFLoader
+    from langchain_community.document_loaders.csv_loader import CSVLoader
+    from langchain_community.document_loaders.json_loader import JSONLoader
+except ImportError as e:
+    st.error(f"Erreur d'importation: {str(e)}")
+    st.error("Installation des dépendances requises...")
+    os.system("pip install --upgrade langchain-community langchain-openai langchain-text-splitters python-dotenv unstructured")
+    st.rerun()
 
 class VectorStoreManager:
     """Gestionnaire de base de données vectorielle pour le RAG"""
